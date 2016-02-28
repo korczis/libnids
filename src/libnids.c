@@ -253,6 +253,12 @@ void nids_pcap_handler(u_char * par, struct pcap_pkthdr *hdr, u_char * data)
 	} else if (data[12] == 0x81 && data[13] == 0) {
 	    /* Skip 802.1Q VLAN and priority information */
 	    nids_linkoffset = 18;
+	    int vlan_offset = 4;
+	    while(data[12 + vlan_offset] == 0x81 && data[13 + vlan_offset] == 0)
+	    {
+	    	nids_linkoffset += 4;
+	    	vlan_offset = vlan_offset + 4;
+	    }
 	} else
 	    /* non-ip frame */
 	    return;
